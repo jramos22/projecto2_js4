@@ -1,0 +1,29 @@
+#wrapper{
+    width: 330px;
+    margin: 0 auto;
+    padding: 10px;
+    border: 1.5px solid black;
+}
+.clearfix{
+    content: "";
+    clear: both;
+    display: table;
+}
+.float{
+    float: left;
+}
+#tarea{
+    height: 25px;
+    width: 200px;
+    border-radius: 10px;
+}
+#add{
+    height: 30px;
+    width: 60px;
+    border-radius: 10px;
+}
+#category{
+    height: 33px;
+    width: 140px;
+    border-radius: 10px;
+}
