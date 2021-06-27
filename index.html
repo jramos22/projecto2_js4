@@ -10,7 +10,7 @@
 <body>
     <div id="wrapper" class="clearfix">
         <form id="newwork" class="newwork">
-            <input id="tarea" type="text" class="float">
+            <input id="tarea" type="text" class="float" required>
             <select name="category" id="category" class="float">
                 <option value="pets">Mascotas</option>
                 <option value="study">Estudios/Trabajos</option>
@@ -18,10 +18,13 @@
             </select>
             <input type="submit" value="Add" id="add" class="float">
         </form>
-        <div id="newinfo">
-
+        <div id="newinfo" class="clearfix">
+            <ul id="lista">
+                
+            </ul>
         </div>
+        <button id="remove">Remove all checked</button>
     </div>
-    <script type="module" src="./aplication.js"></script>
+    <script type="module" src="./script/aplication.js"></script>
 </body>
 </html>

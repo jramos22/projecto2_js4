@@ -11,6 +11,7 @@
 }
 .float{
     float: left;
+    padding: 3px;
 }
 #tarea{
     height: 25px;
@@ -26,4 +27,60 @@
     height: 33px;
     width: 140px;
     border-radius: 10px;
+}
+img{
+    width: 30px;
+    height: 30px;
+}
+ul{
+    list-style: none;
+}
+p{
+    margin: 0px;
+}
+li{
+    float: left;
+    padding: 5px;
+}
+#lista{
+    padding-left:0px;
+}
+.red{
+    color: red;
+}
+.blue{
+    color: blue;
+}
+.green{
+    color: green;
+}
+.lista_li input[type="checkbox"]:checked+img+p{
+    text-decoration:line-through;
+    color:#999
+}
+.delete{
+    text-indent:100%;
+    white-space:nowrap;
+    overflow:hidden;
+    padding: 5px;
+    margin-left:10px;
+    border:none;
+    background-color:transparent;
+    background-image:url(./img/trash.png);
+    background-repeat:no-repeat;
+    background-size:12px 15.75px;
+    width:12px;height:16px
+}
+.edit{
+    text-indent:100%;
+    white-space:nowrap;
+    overflow:hidden;
+    padding:5px;
+    margin-left:10px;
+    border:none;
+    background-color:transparent;
+    background-image:url(./img/lapices.png);
+    background-repeat:no-repeat;
+    background-size:12px 15.75px;
+    width:12px;height:16px
 }
