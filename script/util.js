@@ -1,8 +1,6 @@
-let tareas = [];
+import{ getlista, getremove, forms} from './globals.js';
 
-const lista = document.getElementById('lista');
-const form = document.getElementById('newwork');
-const removeall = document.getElementById('remove'); 
+let tareas = [];
 
 const datosLocalStorage = localStorage.getItem('tareas');
 
@@ -11,11 +9,19 @@ function contador(num){
     return contador;
 }
 
-if (datosLocalStorage) {
-    tareas = JSON.parse(datosLocalStorage);
+function printAll(tareas) {
+    for (let i = 0; i < tareas.length; i++) {
+        printTarea(tareas[i]);
+    }
+}
+function datosStorage(datos) {
+    if (datos) {
+        tareas = JSON.parse(datos);
+    }
 }
 
-console.log(tareas);
+datosStorage(datosLocalStorage);
+
 function printTarea (tarea, clase) {
     //lista
     const li = document.createElement('li');
@@ -48,6 +54,7 @@ function printTarea (tarea, clase) {
         nameTarea.className = 'green float';  
     }
     nameTarea.innerHTML = `${tarea.name}`;
+    //edita la tarea
     const editTarea = document.createElement('button');
     editTarea.className = 'edit';
     editTarea.setAttribute('id', `edit-${tarea.contador}`);
@@ -73,27 +80,26 @@ function printTarea (tarea, clase) {
     li.appendChild(timeTarea);
     li.appendChild(editTarea);
     li.appendChild(deleteTarea);
-    lista.appendChild(li);
-
+    getlista().appendChild(li);
+    // encargado de comprobar el checkbox
     checkbox.addEventListener('click', (event) => {
         const editname = event.currentTarget.parentNode.getElementsByTagName('p')[0].innerHTML;
         const editclass = event.currentTarget.parentNode.getElementsByTagName('label')[0].innerHTML;
         const editTime = event.currentTarget.parentNode.getElementsByTagName('label')[1].innerHTML;
-        const editcontador = event.currentTarget.dataset.taskId;
+        const checkcontador = event.currentTarget.dataset.taskId;
         if (checkbox.checked) {
             const tareacheked = {
                 name: editname,
                 complete: true,
                 class: editclass,
                 time: editTime,
-                contador: editcontador
+                contador: checkcontador
             }
             for (let i = 0; i < tareas.length; i++) {
-                if (tareas[i].contador == editcontador) {
+                if (tareas[i].contador == checkcontador) {
                     tareas.splice(i, 1);
                     tareas.push(tareacheked)
                     localStorage.setItem('tareas', JSON.stringify(tareas));
-                    console.log(tareas);
                 }
             }
         }else if (!checkbox.checked) {
@@ -102,19 +108,18 @@ function printTarea (tarea, clase) {
                 complete: false,
                 class: editclass,
                 time: editTime,
-                contador: editcontador
+                contador: checkcontador
             }
             for (let i = 0; i < tareas.length; i++) {
-                if (tareas[i].contador == editcontador) {
+                if (tareas[i].contador == checkcontador) {
                     tareas.splice(i, 1);
                     tareas.push(tareacheked)
                     localStorage.setItem('tareas', JSON.stringify(tareas));
-                    console.log(tareas);
                 }
             }
         }
     });
-
+    // encargado de la edicion y guardado de la tarea actualizada
     editTarea.addEventListener('click', (event) =>{
         nameTarea.setAttribute('contentEditable', 'true');
         const editname = event.currentTarget.parentNode.getElementsByTagName('p')[0].innerHTML;
@@ -139,12 +144,10 @@ function printTarea (tarea, clase) {
                 tareas.splice(i, 1);
                 tareas.push(tareaEditata)
                 localStorage.setItem('tareas', JSON.stringify(tareas));
-                console.log(tareas);
             }
         }
-        console.log(editcontador);
     });
-
+    // encargado de borrar solo una tarea
     deleteTarea.addEventListener('click', (event) =>{
         const deleteid = event.currentTarget.dataset.taskId;
 
@@ -152,31 +155,27 @@ function printTarea (tarea, clase) {
             if (tareas[i].contador == deleteid) {
                 tareas.splice(i, 1);
                 localStorage.setItem('tareas', JSON.stringify(tareas));
-                console.log(tareas);
                 li.remove();
             }
         }
     });
-
-    removeall.addEventListener('click', (event) =>{
+    //remueve todas las tareas checked
+    getremove().addEventListener('click', (event) =>{
         if(checkbox.checked){
             for (let i = 0; i < tareas.length; i++) {
                 if (tareas[i].complete == true) {
                     tareas.splice(i, 1);
                     localStorage.setItem('tareas', JSON.stringify(tareas));
-                    console.log(tareas);
                     li.remove();
                 }
             }
         }
     });
 }
+// imprime todas las tareas
+printAll(tareas);
 
-for (let i = 0; i < tareas.length; i++) {
-    console.log(tareas[i]);
-    printTarea(tareas[i]);
-}
-
+// se cra nuevo objeto
 class addTarea {
     constructor(nombreTarea, clase, completoTarea, cont){
         this.name = nombreTarea;
@@ -184,9 +183,12 @@ class addTarea {
         this.completoTarea = completoTarea;
         this.contador = cont;
     }
+    //limpiar el form
     limpiaImput() {
-        form.elements[0].value = '';
+        forms().elements[0].value = '';
     }
+    //obtiene la informacion para llamar a la funcion que va a
+    //crear la nueva tarea
     add(){
         const tiempo = 0;
         if (this.class == 'study') {
@@ -215,4 +217,5 @@ class addTarea {
 export {
     addTarea,
     contador,
+    forms
 }
