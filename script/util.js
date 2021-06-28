@@ -1,7 +1,6 @@
-import{ getlista, getremove, forms} from './globals.js';
+import{ getlista, getremove, forms, newpush, tareaTime, timer} from './globals.js';
 
 let tareas = [];
-
 const datosLocalStorage = localStorage.getItem('tareas');
 
 function contador(num){
@@ -65,7 +64,7 @@ function printTarea (tarea, clase) {
     classTarea.innerHTML = `${tarea.class}`;
     //Tiempo
     const timeTarea = document.createElement('label');
-    timeTarea.innerHTML = `${tarea.time}`;
+    timeTarea.innerHTML = tareaTime(tarea.time);
     //Borrar
     const deleteTarea = document.createElement('button');
     deleteTarea.className = 'delete';
@@ -85,47 +84,34 @@ function printTarea (tarea, clase) {
     checkbox.addEventListener('click', (event) => {
         const editname = event.currentTarget.parentNode.getElementsByTagName('p')[0].innerHTML;
         const editclass = event.currentTarget.parentNode.getElementsByTagName('label')[0].innerHTML;
-        const editTime = event.currentTarget.parentNode.getElementsByTagName('label')[1].innerHTML;
         const checkcontador = event.currentTarget.dataset.taskId;
         if (checkbox.checked) {
             const tareacheked = {
                 name: editname,
                 complete: true,
                 class: editclass,
-                time: editTime,
+                time: tarea.time,
                 contador: checkcontador
             }
-            for (let i = 0; i < tareas.length; i++) {
-                if (tareas[i].contador == checkcontador) {
-                    tareas.splice(i, 1);
-                    tareas.push(tareacheked)
-                    localStorage.setItem('tareas', JSON.stringify(tareas));
-                }
-            }
+            newpush(checkcontador, tareacheked, tareas);
         }else if (!checkbox.checked) {
             const tareacheked = {
                 name: editname,
                 complete: false,
                 class: editclass,
-                time: editTime,
+                time: tarea.time,
                 contador: checkcontador
             }
-            for (let i = 0; i < tareas.length; i++) {
-                if (tareas[i].contador == checkcontador) {
-                    tareas.splice(i, 1);
-                    tareas.push(tareacheked)
-                    localStorage.setItem('tareas', JSON.stringify(tareas));
-                }
-            }
+            newpush(checkcontador, tareacheked, tareas);
         }
     });
     // encargado de la edicion y guardado de la tarea actualizada
     editTarea.addEventListener('click', (event) =>{
+        nameTarea.focus();
         nameTarea.setAttribute('contentEditable', 'true');
         const editname = event.currentTarget.parentNode.getElementsByTagName('p')[0].innerHTML;
         const editclass = event.currentTarget.parentNode.getElementsByTagName('label')[0].innerHTML;
         let editstatus = event.currentTarget.parentNode.getElementsByTagName('checkbox');
-        const editTime = event.currentTarget.parentNode.getElementsByTagName('label')[1].innerHTML;
         const editcontador = event.currentTarget.dataset.taskId;
         if (editstatus.checked) {
             editstatus = true;
@@ -136,21 +122,14 @@ function printTarea (tarea, clase) {
             name: editname,
             complete: editstatus,
             class: editclass,
-            time: editTime,
+            time: tarea.time,
             contador: editcontador
         }
-        for (let i = 0; i < tareas.length; i++) {
-            if (tareas[i].contador == editcontador) {
-                tareas.splice(i, 1);
-                tareas.push(tareaEditata)
-                localStorage.setItem('tareas', JSON.stringify(tareas));
-            }
-        }
+        newpush(editcontador, tareaEditata, tareas);
     });
     // encargado de borrar solo una tarea
     deleteTarea.addEventListener('click', (event) =>{
         const deleteid = event.currentTarget.dataset.taskId;
-
         for (let i = 0; i < tareas.length; i++) {
             if (tareas[i].contador == deleteid) {
                 tareas.splice(i, 1);
@@ -160,7 +139,7 @@ function printTarea (tarea, clase) {
         }
     });
     //remueve todas las tareas checked
-    getremove().addEventListener('click', (event) =>{
+    getremove().addEventListener('click', () =>{
         if(checkbox.checked){
             for (let i = 0; i < tareas.length; i++) {
                 if (tareas[i].complete == true) {
@@ -177,11 +156,12 @@ printAll(tareas);
 
 // se cra nuevo objeto
 class addTarea {
-    constructor(nombreTarea, clase, completoTarea, cont){
+    constructor(nombreTarea, clase, completoTarea, conta){
         this.name = nombreTarea;
         this.class = clase;
         this.completoTarea = completoTarea;
-        this.contador = cont;
+        this.contador = conta;
+        this.time = timer().getTime();
     }
     //limpiar el form
     limpiaImput() {
@@ -190,7 +170,6 @@ class addTarea {
     //obtiene la informacion para llamar a la funcion que va a
     //crear la nueva tarea
     add(){
-        const tiempo = 0;
         if (this.class == 'study') {
             this.class = 'study'
         }else if (this.class == 'pets') {
@@ -202,17 +181,14 @@ class addTarea {
             name: this.name,
             complete: this.completoTarea,
             class: this.class,
-            time: tiempo,
+            time: this.time,
             contador: this.contador
         }
         tareas.push(nuevaTarea);
-        
         printTarea(nuevaTarea, this.class);
         localStorage.setItem('tareas', JSON.stringify(tareas));
-        
     }
 }
-
 
 export {
     addTarea,
