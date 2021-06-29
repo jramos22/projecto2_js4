@@ -127,10 +127,10 @@ function printTarea (tarea, clase) {
         }
         newpush(editcontador, tareaEditata, tareas);
     });
-    // encargado de borrar solo una tarea
+    // encargado de borrar solo una tarea   
     deleteTarea.addEventListener('click', (event) =>{
         const deleteid = event.currentTarget.dataset.taskId;
-        for (let i = 0; i < tareas.length; i++) {
+        for (let i = 0; i <= tareas.length; i++) {
             if (tareas[i].contador == deleteid) {
                 tareas.splice(i, 1);
                 localStorage.setItem('tareas', JSON.stringify(tareas));
@@ -145,10 +145,11 @@ function printTarea (tarea, clase) {
                 if (tareas[i].complete == true) {
                     tareas.splice(i, 1);
                     localStorage.setItem('tareas', JSON.stringify(tareas));
-                    li.remove();
                 }
             }
         }
+        getlista().innerHTML = '';
+        printAll(tareas);
     });
 }
 // imprime todas las tareas
