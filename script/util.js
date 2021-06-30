@@ -61,6 +61,7 @@ function printTarea (tarea, clase) {
     editTarea.innerHTML = 'editar';
     //Clase de la tarea
     const classTarea = document.createElement('label');
+    classTarea.className = 'category_task';
     classTarea.innerHTML = `${tarea.class}`;
     //Tiempo
     const timeTarea = document.createElement('label');
